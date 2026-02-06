@@ -22,3 +22,11 @@ class Grid:
         cyan = (21, 204, 209)
         blue = (13, 64, 216)
         return [dark_grey, green, red, orange, yellow, purple, cyan, blue]
+
+    def draw(self): 
+        for row in range(self.num_rows):
+            for column in range(self.num_cols):
+                color = self.grid[row][column]
+                # Code to draw the cell with the specified color
+                # This is a placeholder, as the actual drawing code would depend on the graphics library being used
+                print(f"Drawing cell at ({row}, {column}) with color {color}")
