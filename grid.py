@@ -1,3 +1,5 @@
+import pygame
+
 class Grid:
     def __init__(self):
         self.num_rows = 20
@@ -28,4 +30,3 @@ class Grid:
             for column in range(self.num_cols):
                 cell_value = self.grid[row][column]
                 cell_rect = pygame.Rect(column * self.cell_size, row * self.cell_size, self.cell_size, self.cell_size)
-                
