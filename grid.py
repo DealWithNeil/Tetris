@@ -26,7 +26,6 @@ class Grid:
     def draw(self): 
         for row in range(self.num_rows):
             for column in range(self.num_cols):
-                color = self.grid[row][column]
-                # Code to draw the cell with the specified color
-                # This is a placeholder, as the actual drawing code would depend on the graphics library being used
-                print(f"Drawing cell at ({row}, {column}) with color {color}")
+                cell_value = self.grid[row][column]
+                cell_rect = pygame.Rect(column * self.cell_size, row * self.cell_size, self.cell_size, self.cell_size)
+                
