@@ -30,4 +30,4 @@ class Grid:
             for column in range(self.num_cols):
                 cell_value = self.grid[row][column]
                 cell_rect = pygame.Rect(column * self.cell_size, row * self.cell_size, self.cell_size, self.cell_size)
-                pygame.draw.rect(screen, color, rect)
+                pygame.draw.rect(screen, self.colors[cell_value], cell_rect)
