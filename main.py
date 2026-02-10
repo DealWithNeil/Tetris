@@ -11,6 +11,8 @@ clock = pygame.time.Clock()
 
 game_grid = Grid()
 game_grid.print_grid()
+game_grid.draw(screen)
+
 
 while True: 
     for event in pygame.event.get():
