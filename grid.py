@@ -7,6 +7,12 @@ class Grid:
         self.cell_size = 30
         self.grid = [[0 for _ in range(self.num_cols)] for _ in range(self.num_rows)]
         self.colors = self.get_cell_colors()
+
+        # --- Test pattern (top-left 2x2 block) ---
+        self.grid[0][0] = 1
+        self.grid[0][1] = 2
+        self.grid[1][0] = 3
+        self.grid[1][1] = 4
     
     def print_grid(self):
         for row in self.grid:
