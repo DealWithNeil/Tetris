@@ -12,6 +12,8 @@ clock = pygame.time.Clock()
 game_grid = Grid()
 game_grid.print_grid()
 
+game_grid.update()
+game_grid.draw(screen)
 
 
 while True: 

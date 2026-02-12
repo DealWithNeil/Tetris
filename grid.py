@@ -8,12 +8,15 @@ class Grid:
         self.grid = [[0 for _ in range(self.num_cols)] for _ in range(self.num_rows)]
         self.colors = self.get_cell_colors()
 
-        # --- Test pattern (top-left 2x2 block) ---
-        self.grid[0][0] = 1
-        self.grid[0][1] = 2
-        self.grid[1][0] = 3
-        self.grid[1][1] = 4
-    
+        # Active falling cell
+        self.current_row = 0
+        self.current_col = 4
+        self.grid[self.current_row][self.current_col] = 1
+
+        # Gravity timer
+        self.fall_speed = 500  # milliseconds
+        self.last_fall_time = pygame.time.get_ticks()
+
     def print_grid(self):
         for row in self.grid:
             print(row)
@@ -44,3 +47,22 @@ class Grid:
                     self.colors[cell_value],
                     cell_rect
                 )
+
+    def update(self):
+        current_time = pygame.time.get_ticks()
+
+        if current_time - self.last_fall_time > self.fall_speed:
+            # Clear current position
+            self.grid[self.current_row][self.current_col] = 0
+
+            # Move down
+            self.current_row += 1
+
+            # Prevent going off grid
+            if self.current_row >= self.num_rows:
+                self.current_row = 0
+
+            # Draw new position
+            self.grid[self.current_row][self.current_col] = 1
+
+            self.last_fall_time = current_time
