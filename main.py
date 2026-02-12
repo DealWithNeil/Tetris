@@ -15,6 +15,8 @@ game_grid.print_grid()
 game_grid.update()
 game_grid.draw(screen)
 
+game_grid.update()
+game_grid.draw(screen)
 
 while True: 
     for event in pygame.event.get():
