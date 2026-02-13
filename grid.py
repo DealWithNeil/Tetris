@@ -59,8 +59,13 @@ class Grid:
             self.current_row += 1
 
             # Prevent going off grid
-            if self.current_row >= self.num_rows:
-                self.current_row = 0
+            if self.current_row + 1 >= self.num_rows:
+                
+            # Lock piece (do nothing, just spawn new one)
+                self.spawn_new_cell()
+                return  # Stop updating this piece
+            else:
+                self.current_row += 1
 
             # Draw new position
             self.grid[self.current_row][self.current_col] = 1
