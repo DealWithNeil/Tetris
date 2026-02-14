@@ -29,3 +29,14 @@ while True:
 
     pygame.display.update()
     clock.tick(60)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                game_grid.move(-1)
+            if event.key == pygame.K_RIGHT:
+                game_grid.move(1)
