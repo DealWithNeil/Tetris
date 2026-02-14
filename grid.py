@@ -74,3 +74,17 @@ class Grid:
 
         # If spawn position already filled → game over later
         self.grid[self.current_row][self.current_col] = 1
+
+    def move(self, direction):
+        new_col = self.current_col + direction
+
+        # Check boundaries
+        if 0 <= new_col < self.num_cols:
+            # Clear current position
+            self.grid[self.current_row][self.current_col] = 0
+
+            # Update column
+            self.current_col = new_col
+
+            # Draw new position
+            self.grid[self.current_row][self.current_col] = 1
