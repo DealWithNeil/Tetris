@@ -57,7 +57,10 @@ class Grid:
             self.grid[self.current_row][self.current_col] = 0
 
             # Check if we hit bottom
-            if self.current_row + 1 >= self.num_rows:
+            next_row = self.current_row + 1
+
+            if next_row >= self.num_rows or self.grid[next_row][self.current_col] != 0:
+
                 # Lock piece
                 self.grid[self.current_row][self.current_col] = 1
                 self.spawn_new_cell()
