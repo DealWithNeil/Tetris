@@ -9,13 +9,17 @@ class Grid:
         self.colors = self.get_cell_colors()
 
         # Active falling cell
+        self.current_row = 0
+        self.current_col = 4
         self.current_piece = [
             [0, 4],
             [0, 5],
             [1, 4],
             [1, 5]
         ]
-        self.grid[self.current_row][self.current_col] = 1
+
+        for row, col in self.current_piece:
+            self.grid[row][col] = 1
 
         # Gravity timer
         self.fall_speed = 500  # milliseconds
