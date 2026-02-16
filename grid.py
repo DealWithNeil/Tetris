@@ -87,12 +87,18 @@ class Grid:
             self.last_fall_time = current_time
 
 
-    def spawn_new_cell(self):
-        self.current_row = 0
-        self.current_col = 4
+    def spawn_new_piece(self):
+        self.current_piece = [
+            [0, 4],
+            [0, 5],
+            [1, 4],
+            [1, 5]
+        ]
+
+        for row, col in self.current_piece:
+            self.grid[row][col] = 1
 
         # If spawn position already filled → game over later
-        self.grid[self.current_row][self.current_col] = 1
 
     def move(self, direction):
         new_col = self.current_col + direction
