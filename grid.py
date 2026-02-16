@@ -60,24 +60,32 @@ class Grid:
         current_time = pygame.time.get_ticks()
 
         if current_time - self.last_fall_time > self.fall_speed:
+            # Check if piece can move down
+            can_move = True
 
-            # Clear current position
-            self.grid[self.current_row][self.current_col] = 0
+            for row, col in self.current_piece:
+                next_row = row + 1
+                if next_row >= self.num_rows or self.grid[next_row][col] != 0:
+                    can_move = False
+                    break
 
-            # Check if we hit bottom
-            next_row = self.current_row + 1
+            if can_move:
+                # Clear old positions
+                for row, col in self.current_piece:
+                    self.grid[row][col] = 0
 
-            if next_row >= self.num_rows or self.grid[next_row][self.current_col] != 0:
+                # Move piece down
+                for cell in self.current_piece:
+                    cell[0] += 1
 
-                # Lock piece
-                self.grid[self.current_row][self.current_col] = 1
-                self.spawn_new_cell()
+                # Redraw piece
+                for row, col in self.current_piece:
+                    self.grid[row][col] = 1
             else:
-                # Move down
-                self.current_row += 1
-                self.grid[self.current_row][self.current_col] = 1
+                self.spawn_new_piece()
 
             self.last_fall_time = current_time
+
 
     def spawn_new_cell(self):
         self.current_row = 0
