@@ -82,7 +82,9 @@ class Grid:
                 for row, col in self.current_piece:
                     self.grid[row][col] = 1
             else:
+                self.clear_full_rows()
                 self.spawn_new_piece()
+
 
             self.last_fall_time = current_time
 
