@@ -113,3 +113,22 @@ class Grid:
 
             # Draw new position
             self.grid[self.current_row][self.current_col] = 1
+
+        
+
+
+        def clear_full_rows(self):
+            new_grid = []
+
+            for row in self.grid:
+                if any(cell == 0 for cell in row):
+                    new_grid.append(row)
+
+            # Count how many rows were removed
+            rows_removed = self.num_rows - len(new_grid)
+
+            # Add empty rows at top
+            for _ in range(rows_removed):
+                new_grid.insert(0, [0 for _ in range(self.num_cols)])
+
+            self.grid = new_grid
