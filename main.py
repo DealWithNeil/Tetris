@@ -36,6 +36,8 @@ while True:
             sys.exit()
 
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                game_grid.rotate()
             if event.key == pygame.K_LEFT:
                 game_grid.move(-1)
             if event.key == pygame.K_RIGHT:
