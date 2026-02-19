@@ -134,3 +134,35 @@ class Grid:
                 new_grid.insert(0, [0 for _ in range(self.num_cols)])
 
             self.grid = new_grid
+
+        def rotate(self):
+            pivot = self.current_piece[0]
+            pivot_row, pivot_col = pivot
+
+            new_positions = []
+
+            for row, col in self.current_piece:
+                new_row = pivot_row - (col - pivot_col)
+                new_col = pivot_col + (row - pivot_row)
+                new_positions.append([new_row, new_col])
+
+            # Check if all new positions are valid
+            for row, col in new_positions:
+                if (
+                    row < 0 or row >= self.num_rows or
+                    col < 0 or col >= self.num_cols or
+                    self.grid[row][col] != 0
+                ):
+                    return  # Invalid rotation → cancel
+
+            # Clear old piece
+            for row, col in self.current_piece:
+                self.grid[row][col] = 0
+
+            # Apply rotation
+            self.current_piece = new_positions
+
+            # Redraw piece
+            for row, col in self.current_piece:
+                self.grid[row][col] = 1
+
