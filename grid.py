@@ -91,10 +91,10 @@ class Grid:
 
     def spawn_new_piece(self):
         self.current_piece = [
+            [0, 3],
             [0, 4],
             [0, 5],
-            [1, 4],
-            [1, 5]
+            [0, 6]
         ]
 
         for row, col in self.current_piece:
