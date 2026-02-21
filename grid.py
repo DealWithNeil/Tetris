@@ -136,33 +136,45 @@ class Grid:
             self.grid = new_grid
 
         def rotate(self):
-            pivot = self.current_piece[0]
-            pivot_row, pivot_col = pivot
+            
+            pivot_row, pivot_col = self.current_piece[0]
 
             new_positions = []
 
+            # Calculate rotated positions
             for row, col in self.current_piece:
                 new_row = pivot_row - (col - pivot_col)
                 new_col = pivot_col + (row - pivot_row)
                 new_positions.append([new_row, new_col])
 
-            # Check if all new positions are valid
-            for row, col in new_positions:
-                if (
-                    row < 0 or row >= self.num_rows or
-                    col < 0 or col >= self.num_cols or
-                    self.grid[row][col] != 0
-                ):
-                    return  # Invalid rotation → cancel
+            # Try different horizontal offsets (wall kicks)
+            for offset in [0, -1, 1]:
+                valid = True
+                shifted_positions = []
 
-            # Clear old piece
-            for row, col in self.current_piece:
-                self.grid[row][col] = 0
+                for row, col in new_positions:
+                    shifted_col = col + offset
 
-            # Apply rotation
-            self.current_piece = new_positions
+                    if (
+                        row < 0 or row >= self.num_rows or
+                        shifted_col < 0 or shifted_col >= self.num_cols or
+                        self.grid[row][shifted_col] != 0
+                    ):
+                        valid = False
+                        break
 
-            # Redraw piece
-            for row, col in self.current_piece:
-                self.grid[row][col] = 1
+                    shifted_positions.append([row, shifted_col])
+
+                if valid:
+                    # Clear old piece
+                    for row, col in self.current_piece:
+                        self.grid[row][col] = 0
+
+                    self.current_piece = shifted_positions
+
+                    # Draw rotated piece
+                    for row, col in self.current_piece:
+                        self.grid[row][col] = 1
+
+                    return  # Stop after first valid kick
 
