@@ -1,5 +1,5 @@
 import pygame
-
+import random
 class Grid:
     def __init__(self):
         self.num_rows = 20
@@ -7,7 +7,14 @@ class Grid:
         self.cell_size = 30
         self.grid = [[0 for _ in range(self.num_cols)] for _ in range(self.num_rows)]
         self.colors = self.get_cell_colors()
-
+        
+        self.pieces = {
+            "O": [[0,4],[0,5],[1,4],[1,5]],
+            "I": [[0,3],[0,4],[0,5],[0,6]],
+            "T": [[0,4],[1,3],[1,4],[1,5]],
+            "L": [[0,5],[1,3],[1,4],[1,5]]
+        }
+    
         # Active falling cell
         self.current_row = 0
         self.current_col = 4
@@ -103,19 +110,29 @@ class Grid:
         # If spawn position already filled → game over later
 
     def move(self, direction):
-        new_col = self.current_col + direction
+        new_positions = []
 
-        # Check boundaries
-        if 0 <= new_col < self.num_cols:
-            # Clear current position
-            self.grid[self.current_row][self.current_col] = 0
+        for row, col in self.current_piece:
+            new_col = col + direction
 
-            # Update column
-            self.current_col = new_col
+            if (
+                new_col < 0 or
+                new_col >= self.num_cols or
+                self.grid[row][new_col] != 0
+            ):
+                return  # Invalid move
 
-            # Draw new position
-            self.grid[self.current_row][self.current_col] = 1
+            new_positions.append([row, new_col])
 
+        # Clear old piece
+        for row, col in self.current_piece:
+            self.grid[row][col] = 0
+
+        self.current_piece = new_positions
+
+        # Draw moved piece
+        for row, col in self.current_piece:
+            self.grid[row][col] = 1
         
 
 
