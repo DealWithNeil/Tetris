@@ -62,12 +62,15 @@ class Grid:
             self.last_fall_time = current_time
 
 
-    def spawn_new_piece(self):
-        piece_type = random.choice(list(self.pieces.keys()))
-        self.current_piece = [cell[:] for cell in self.pieces[piece_type]]
+        def spawn_new_piece(self):
+            piece_type = random.choice(list(self.pieces.keys()))
+            piece_data = self.pieces[piece_type]
 
-        for row, col in self.current_piece:
-            self.grid[row][col] = 1
+            self.current_piece = [cell[:] for cell in piece_data["shape"]]
+            self.current_color = piece_data["color"]
+
+            for row, col in self.current_piece:
+                self.grid[row][col] = self.current_color
 
 
     def can_move(self, row_offset, col_offset):
