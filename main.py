@@ -2,34 +2,19 @@ import pygame, sys
 from grid import Grid
 
 pygame.init()
+
+font = pygame.font.SysFont("Arial", 24)
+
 dark_blue = (44, 44, 127)
 
-screen = pygame.display.set_mode((300, 600))
+screen = pygame.display.set_mode((500, 600))
 pygame.display.set_caption("Tetris")
 
 clock = pygame.time.Clock()
 
 game_grid = Grid()
-game_grid.print_grid()
 
-game_grid.update()
-game_grid.draw(screen)
-
-game_grid.update()
-game_grid.draw(screen)
-
-while True: 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-            
-    screen.fill(dark_blue)
-    game_grid.draw(screen)
-
-    pygame.display.update()
-    clock.tick(60)
-
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -42,3 +27,17 @@ while True:
                 game_grid.move(-1)
             if event.key == pygame.K_RIGHT:
                 game_grid.move(1)
+
+    game_grid.update()
+
+    screen.fill(dark_blue)
+    game_grid.draw(screen)
+
+    score_text = font.render(f"Score: {game_grid.score}", True, (255, 255, 255))
+    screen.blit(score_text, (320, 50))
+
+    level_text = font.render(f"Level: {game_grid.level}", True, (255, 255, 255))
+    screen.blit(level_text, (320, 80))
+
+    pygame.display.update()
+    clock.tick(60)
