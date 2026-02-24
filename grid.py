@@ -112,13 +112,22 @@ class Grid:
 
 
     def clear_full_rows(self):
-        new_grid = [row for row in self.grid if any(cell == 0 for cell in row)]
-        rows_removed = self.num_rows - len(new_grid)
+        new_grid = []
+        rows_removed = 0
+
+        for row in self.grid:
+            if all(cell != 0 for cell in row):
+                rows_removed += 1
+            else:
+                new_grid.append(row)
 
         for _ in range(rows_removed):
             new_grid.insert(0, [0 for _ in range(self.num_cols)])
 
         self.grid = new_grid
+
+        if rows_removed > 0:
+            self.update_score(rows_removed)
 
 
     def rotate(self):
