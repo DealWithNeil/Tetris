@@ -166,3 +166,20 @@ class Grid:
                 for row, col in self.current_piece:
                     self.grid[row][col] = 1
                 return
+            
+        def update_score(self, rows_removed):
+            scoring_table = {
+                1: 100,
+                2: 300,
+                3: 500,
+                4: 800
+            }
+
+            self.score += scoring_table.get(rows_removed, 0) * self.level
+            self.lines_cleared += rows_removed
+
+            # Level up every 10 lines
+            self.level = self.lines_cleared // 10 + 1
+
+            # Increase speed as level increases
+            self.fall_speed = max(100, 500 - (self.level - 1) * 40)
