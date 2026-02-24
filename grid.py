@@ -9,6 +9,9 @@ class Grid:
         self.cell_size = 30
         self.grid = [[0 for _ in range(self.num_cols)] for _ in range(self.num_rows)]
         self.colors = self.get_cell_colors()
+        self.score = 0
+        self.lines_cleared = 0
+        self.level = 1
 
         self.pieces = {
             "O": {"shape": [[0,4],[0,5],[1,4],[1,5]], "color": 1},
