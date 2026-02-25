@@ -9,12 +9,11 @@ class Grid:
         self.cell_size = 30
         self.grid = [[0 for _ in range(self.num_cols)] for _ in range(self.num_rows)]
         self.colors = self.get_cell_colors()
+
         self.score = 0
         self.lines_cleared = 0
         self.level = 1
         self.game_over = False
-
-
 
         self.pieces = {
             "O": {"shape": [[0,4],[0,5],[1,4],[1,5]], "color": 1},
@@ -45,50 +44,46 @@ class Grid:
     def draw(self, screen):
         for row in range(self.num_rows):
             for col in range(self.num_cols):
-                cell_value = self.grid[row][col]
+                value = self.grid[row][col]
                 rect = pygame.Rect(
                     col * self.cell_size + 1,
                     row * self.cell_size + 1,
                     self.cell_size - 1,
                     self.cell_size - 1
                 )
-                pygame.draw.rect(screen, self.colors[cell_value], rect)
+                pygame.draw.rect(screen, self.colors[value], rect)
 
 
     def update(self):
         if self.game_over:
-            return  # Stop everything if game ended
+            return
 
         current_time = pygame.time.get_ticks()
 
         if current_time - self.last_fall_time > self.fall_speed:
-
             if self.can_move(1, 0):
                 self.move_piece(1, 0)
             else:
-                # Piece has landed
                 self.clear_full_rows()
                 self.spawn_new_piece()
 
             self.last_fall_time = current_time
 
 
-        def spawn_new_piece(self):
-            piece_type = random.choice(list(self.pieces.keys()))
-            piece_data = self.pieces[piece_type]
+    def spawn_new_piece(self):
+        piece_type = random.choice(list(self.pieces.keys()))
+        piece_data = self.pieces[piece_type]
 
-            self.current_piece = [cell[:] for cell in piece_data["shape"]]
-            self.current_color = piece_data["color"]
+        self.current_piece = [cell[:] for cell in piece_data["shape"]]
+        self.current_color = piece_data["color"]
 
-            # Check if spawn is blocked
-            for row, col in self.current_piece:
-                if self.grid[row][col] != 0:
-                    self.game_over = True
-                    return
+        for row, col in self.current_piece:
+            if self.grid[row][col] != 0:
+                self.game_over = True
+                return
 
-            # Draw piece
-            for row, col in self.current_piece:
-                self.grid[row][col] = self.current_color
+        for row, col in self.current_piece:
+            self.grid[row][col] = self.current_color
 
 
     def can_move(self, row_offset, col_offset):
@@ -107,18 +102,15 @@ class Grid:
 
 
     def move_piece(self, row_offset, col_offset):
-        # Clear old
         for row, col in self.current_piece:
             self.grid[row][col] = 0
 
-        # Update positions
         for cell in self.current_piece:
             cell[0] += row_offset
             cell[1] += col_offset
 
-        # Redraw
         for row, col in self.current_piece:
-            self.grid[row][col] = 1
+            self.grid[row][col] = self.current_color
 
 
     def move(self, direction):
@@ -145,6 +137,20 @@ class Grid:
             self.update_score(rows_removed)
 
 
+    def update_score(self, rows_removed):
+        scoring_table = {
+            1: 100,
+            2: 300,
+            3: 500,
+            4: 800
+        }
+
+        self.score += scoring_table.get(rows_removed, 0) * self.level
+        self.lines_cleared += rows_removed
+        self.level = self.lines_cleared // 10 + 1
+        self.fall_speed = max(100, 500 - (self.level - 1) * 40)
+
+
     def rotate(self):
         pivot_row, pivot_col = self.current_piece[0]
         new_positions = []
@@ -154,7 +160,6 @@ class Grid:
             new_col = pivot_col + (row - pivot_row)
             new_positions.append([new_row, new_col])
 
-        # Wall kicks
         for offset in [0, -1, 1]:
             valid = True
             shifted = []
@@ -179,22 +184,5 @@ class Grid:
                 self.current_piece = shifted
 
                 for row, col in self.current_piece:
-                    self.grid[row][col] = 1
+                    self.grid[row][col] = self.current_color
                 return
-            
-        def update_score(self, rows_removed):
-            scoring_table = {
-                1: 100,
-                2: 300,
-                3: 500,
-                4: 800
-            }
-
-            self.score += scoring_table.get(rows_removed, 0) * self.level
-            self.lines_cleared += rows_removed
-
-            # Level up every 10 lines
-            self.level = self.lines_cleared // 10 + 1
-
-            # Increase speed as level increases
-            self.fall_speed = max(100, 500 - (self.level - 1) * 40)
