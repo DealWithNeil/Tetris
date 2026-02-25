@@ -12,6 +12,9 @@ class Grid:
         self.score = 0
         self.lines_cleared = 0
         self.level = 1
+        self.game_over = False
+
+
 
         self.pieces = {
             "O": {"shape": [[0,4],[0,5],[1,4],[1,5]], "color": 1},
@@ -72,6 +75,13 @@ class Grid:
             self.current_piece = [cell[:] for cell in piece_data["shape"]]
             self.current_color = piece_data["color"]
 
+            # Check if spawn is blocked
+            for row, col in self.current_piece:
+                if self.grid[row][col] != 0:
+                    self.game_over = True
+                    return
+
+            # Draw piece
             for row, col in self.current_piece:
                 self.grid[row][col] = self.current_color
 
