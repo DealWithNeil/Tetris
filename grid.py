@@ -56,12 +56,17 @@ class Grid:
 
 
     def update(self):
+        if self.game_over:
+            return  # Stop everything if game ended
+
         current_time = pygame.time.get_ticks()
 
         if current_time - self.last_fall_time > self.fall_speed:
+
             if self.can_move(1, 0):
                 self.move_piece(1, 0)
             else:
+                # Piece has landed
                 self.clear_full_rows()
                 self.spawn_new_piece()
 
