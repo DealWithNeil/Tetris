@@ -23,6 +23,9 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 game_grid.rotate()
+                if event.key == pygame.K_r and game_grid.game_over:
+                    game_grid = Grid()
+                    
             if event.key == pygame.K_LEFT:
                 game_grid.move(-1)
             if event.key == pygame.K_RIGHT:
@@ -42,6 +45,6 @@ while True:
     if game_grid.game_over:
         game_over_text = font.render("GAME OVER", True, (255, 0, 0))
         screen.blit(game_over_text, (320, 150))
-        
+
     pygame.display.update()
     clock.tick(60)
