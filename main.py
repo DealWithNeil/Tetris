@@ -39,5 +39,9 @@ while True:
     level_text = font.render(f"Level: {game_grid.level}", True, (255, 255, 255))
     screen.blit(level_text, (320, 80))
 
+    if game_grid.game_over:
+        game_over_text = font.render("GAME OVER", True, (255, 0, 0))
+        screen.blit(game_over_text, (320, 150))
+        
     pygame.display.update()
     clock.tick(60)
