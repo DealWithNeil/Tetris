@@ -22,6 +22,8 @@ while True:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
+                if event.key == pygame.K_SPACE:
+                    game_grid.hard_drop()
                 game_grid.rotate()
                 if event.key == pygame.K_r and game_grid.game_over:
                     game_grid = Grid()
