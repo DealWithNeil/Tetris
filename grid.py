@@ -186,3 +186,15 @@ class Grid:
                 for row, col in self.current_piece:
                     self.grid[row][col] = self.current_color
                 return
+            
+        def hard_drop(self):
+            if self.game_over:
+                return
+
+            # Keep moving down until we can't
+            while self.can_move(1, 0):
+                self.move_piece(1, 0)
+
+            # Lock piece
+            self.clear_full_rows()
+            self.spawn_new_piece()
