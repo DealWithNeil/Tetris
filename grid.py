@@ -198,3 +198,22 @@ class Grid:
             # Lock piece
             self.clear_full_rows()
             self.spawn_new_piece()
+
+        def get_ghost_piece(self):
+            # Make a copy of current piece
+            ghost = [cell[:] for cell in self.current_piece]
+
+            # Drop it until it hits something
+            while True:
+                can_move = True
+                for row, col in ghost:
+                    new_row = row + 1
+                    if new_row >= self.num_rows or self.grid[new_row][col] != 0:
+                        can_move = False
+                        break
+                if not can_move:
+                    break
+                for cell in ghost:
+                    cell[0] += 1
+
+            return ghost
