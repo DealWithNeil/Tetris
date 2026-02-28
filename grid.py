@@ -42,16 +42,30 @@ class Grid:
 
 
     def draw(self, screen):
+        # Draw the regular grid
         for row in range(self.num_rows):
             for col in range(self.num_cols):
-                value = self.grid[row][col]
+                cell_value = self.grid[row][col]
                 rect = pygame.Rect(
                     col * self.cell_size + 1,
                     row * self.cell_size + 1,
                     self.cell_size - 1,
                     self.cell_size - 1
                 )
-                pygame.draw.rect(screen, self.colors[value], rect)
+                pygame.draw.rect(screen, self.colors[cell_value], rect)
+
+    # Draw ghost piece
+        if not self.game_over:
+            ghost_piece = self.get_ghost_piece()
+            ghost_color = (100, 100, 100)  # Greyed-out color
+            for row, col in ghost_piece:
+                rect = pygame.Rect(
+                    col * self.cell_size + 1,
+                    row * self.cell_size + 1,
+                    self.cell_size - 1,
+                    self.cell_size - 1
+                )
+                pygame.draw.rect(screen, ghost_color, rect)
 
 
     def update(self):
