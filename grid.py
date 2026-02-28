@@ -1,169 +1,5 @@
-import pygame
-import random
-
-
 class Grid:
-    def __init__(self):
-        self.num_rows = 20
-        self.num_cols = 10
-        self.cell_size = 30
-        self.grid = [[0 for _ in range(self.num_cols)] for _ in range(self.num_rows)]
-        self.colors = self.get_cell_colors()
-
-        self.score = 0
-        self.lines_cleared = 0
-        self.level = 1
-        self.game_over = False
-
-        self.pieces = {
-            "O": {"shape": [[0,4],[0,5],[1,4],[1,5]], "color": 1},
-            "I": {"shape": [[0,3],[0,4],[0,5],[0,6]], "color": 2},
-            "T": {"shape": [[0,4],[1,3],[1,4],[1,5]], "color": 3},
-            "L": {"shape": [[0,5],[1,3],[1,4],[1,5]], "color": 4}
-        }
-
-        self.fall_speed = 500
-        self.last_fall_time = pygame.time.get_ticks()
-
-        self.spawn_new_piece()
-
-
-    def get_cell_colors(self):
-        return [
-            (26, 31, 40),
-            (47, 230, 23),
-            (232, 18, 18),
-            (226, 116, 17),
-            (237, 234, 4),
-            (166, 0, 247),
-            (21, 204, 209),
-            (13, 64, 216)
-        ]
-
-
-    def draw(self, screen):
-        # Draw the regular grid
-        for row in range(self.num_rows):
-            for col in range(self.num_cols):
-                cell_value = self.grid[row][col]
-                rect = pygame.Rect(
-                    col * self.cell_size + 1,
-                    row * self.cell_size + 1,
-                    self.cell_size - 1,
-                    self.cell_size - 1
-                )
-                pygame.draw.rect(screen, self.colors[cell_value], rect)
-
-    # Draw ghost piece
-        if not self.game_over:
-            ghost_piece = self.get_ghost_piece()
-            ghost_color = (100, 100, 100)  # Greyed-out color
-            for row, col in ghost_piece:
-                rect = pygame.Rect(
-                    col * self.cell_size + 1,
-                    row * self.cell_size + 1,
-                    self.cell_size - 1,
-                    self.cell_size - 1
-                )
-                pygame.draw.rect(screen, ghost_color, rect)
-
-
-    def update(self):
-        if self.game_over:
-            return
-
-        current_time = pygame.time.get_ticks()
-
-        if current_time - self.last_fall_time > self.fall_speed:
-            if self.can_move(1, 0):
-                self.move_piece(1, 0)
-            else:
-                self.clear_full_rows()
-                self.spawn_new_piece()
-
-            self.last_fall_time = current_time
-
-
-    def spawn_new_piece(self):
-        piece_type = random.choice(list(self.pieces.keys()))
-        piece_data = self.pieces[piece_type]
-
-        self.current_piece = [cell[:] for cell in piece_data["shape"]]
-        self.current_color = piece_data["color"]
-
-        for row, col in self.current_piece:
-            if self.grid[row][col] != 0:
-                self.game_over = True
-                return
-
-        for row, col in self.current_piece:
-            self.grid[row][col] = self.current_color
-
-
-    def can_move(self, row_offset, col_offset):
-        for row, col in self.current_piece:
-            new_row = row + row_offset
-            new_col = col + col_offset
-
-            if (
-                new_row < 0 or new_row >= self.num_rows or
-                new_col < 0 or new_col >= self.num_cols or
-                self.grid[new_row][new_col] != 0
-            ):
-                return False
-
-        return True
-
-
-    def move_piece(self, row_offset, col_offset):
-        for row, col in self.current_piece:
-            self.grid[row][col] = 0
-
-        for cell in self.current_piece:
-            cell[0] += row_offset
-            cell[1] += col_offset
-
-        for row, col in self.current_piece:
-            self.grid[row][col] = self.current_color
-
-
-    def move(self, direction):
-        if self.can_move(0, direction):
-            self.move_piece(0, direction)
-
-
-    def clear_full_rows(self):
-        new_grid = []
-        rows_removed = 0
-
-        for row in self.grid:
-            if all(cell != 0 for cell in row):
-                rows_removed += 1
-            else:
-                new_grid.append(row)
-
-        for _ in range(rows_removed):
-            new_grid.insert(0, [0 for _ in range(self.num_cols)])
-
-        self.grid = new_grid
-
-        if rows_removed > 0:
-            self.update_score(rows_removed)
-
-
-    def update_score(self, rows_removed):
-        scoring_table = {
-            1: 100,
-            2: 300,
-            3: 500,
-            4: 800
-        }
-
-        self.score += scoring_table.get(rows_removed, 0) * self.level
-        self.lines_cleared += rows_removed
-        self.level = self.lines_cleared // 10 + 1
-        self.fall_speed = max(100, 500 - (self.level - 1) * 40)
-
+    ...
 
     def rotate(self):
         pivot_row, pivot_col = self.current_piece[0]
@@ -180,15 +16,9 @@ class Grid:
 
             for row, col in new_positions:
                 col += offset
-
-                if (
-                    row < 0 or row >= self.num_rows or
-                    col < 0 or col >= self.num_cols or
-                    self.grid[row][col] != 0
-                ):
+                if row < 0 or row >= self.num_rows or col < 0 or col >= self.num_cols or self.grid[row][col] != 0:
                     valid = False
                     break
-
                 shifted.append([row, col])
 
             if valid:
@@ -200,34 +30,27 @@ class Grid:
                 for row, col in self.current_piece:
                     self.grid[row][col] = self.current_color
                 return
-            
-        def hard_drop(self):
-            if self.game_over:
-                return
 
-            # Keep moving down until we can't
-            while self.can_move(1, 0):
-                self.move_piece(1, 0)
+    # --- NEW: Hard Drop ---
+    def hard_drop(self):
+        if self.game_over:
+            return
+        while self.can_move(1, 0):
+            self.move_piece(1, 0)
+        self.clear_full_rows()
+        self.spawn_new_piece()
 
-            # Lock piece
-            self.clear_full_rows()
-            self.spawn_new_piece()
-
-        def get_ghost_piece(self):
-            # Make a copy of current piece
-            ghost = [cell[:] for cell in self.current_piece]
-
-            # Drop it until it hits something
-            while True:
-                can_move = True
-                for row, col in ghost:
-                    new_row = row + 1
-                    if new_row >= self.num_rows or self.grid[new_row][col] != 0:
-                        can_move = False
-                        break
-                if not can_move:
+    # --- NEW: Ghost Piece ---
+    def get_ghost_piece(self):
+        ghost = [cell[:] for cell in self.current_piece]
+        while True:
+            can_move = True
+            for row, col in ghost:
+                if row + 1 >= self.num_rows or self.grid[row + 1][col] != 0:
+                    can_move = False
                     break
-                for cell in ghost:
-                    cell[0] += 1
-
-            return ghost
+            if not can_move:
+                break
+            for cell in ghost:
+                cell[0] += 1
+        return ghost
